@@ -1,15 +1,9 @@
 import React from "react";
 
-const Alert = () => {
+const Alert = props => {
   return (
     <div className="jumbotron">
-      <h1>Hello, world!</h1>
-      <p>...</p>
-      <p>
-        <a className="btn btn-primary btn-lg" href="#" role="button">
-          Learn more
-        </a>
-      </p>
+      <h1>PANIC!: {props.error}</h1>
     </div>
   );
 };

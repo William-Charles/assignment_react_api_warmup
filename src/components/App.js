@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import UserForm from "./UserForm";
-import UserCard from "./UserCard";
 
 import JumbotronFluid from "./elements/JumbotronFluid";
 import UserList from "./UserList";
@@ -22,7 +21,7 @@ class App extends Component {
     this.setState({
       isFetching: true
     });
-    fetch("https://reqres.in/api/users?delay=3")
+    fetch("https://reqres.in/api/users?delay=0")
       .then(response => response.json())
       .then(json => {
         this.setState({
@@ -32,6 +31,62 @@ class App extends Component {
       });
   }
 
+  onDeleteUser = e => {
+    const form = e.target;
+
+    const target = e.target;
+    console.log(target);
+    const body = serialize(form, {
+      hash: true
+    });
+    // Create headers to set the content type to json
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");
+
+    // Set options, and stringify the body to JSON
+    const options = {
+      headers,
+      method: "DELETE",
+      body: JSON.stringify(body)
+    };
+
+    // Before performing the fetch, set isFetching to true
+    this.setState({
+      isFetching: true
+    });
+
+    fetch("https://reqres.in/api/users", options)
+      .then(response => {
+        // If response not okay, throw an error
+        if (!response.ok) {
+          throw new Error(`${response.status} ${response.statusText}`);
+        }
+
+        // Otherwise, extract the response into json
+        return response.json();
+      })
+      .then(json => {
+        // Update the user list and isFetching.
+        // Reset the form in a callback after state is set.
+        this.setState(
+          {
+            isFetching: false,
+            users: [...this.state.users, json]
+          },
+          () => {
+            form.reset();
+          }
+        );
+      })
+      .catch(error => {
+        // Set error in state & log to console
+        console.log(error);
+        this.setState({
+          isFetching: false,
+          error
+        });
+      });
+  };
   // New add user action
   onAddUser = e => {
     e.preventDefault();
@@ -96,7 +151,11 @@ class App extends Component {
     return (
       <div className="App">
         <JumbotronFluid />
-        <UserList users={users} isFetching={isFetching} />
+        <UserList
+          users={users}
+          onDelete={this.onDeleteUser}
+          isFetching={isFetching}
+        />
         <br />
         <UserForm onSubmit={this.onAddUser} error={error} />
       </div>
