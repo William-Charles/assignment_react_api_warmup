@@ -13,7 +13,8 @@ class App extends Component {
     super();
     this.state = {
       users: [],
-      isFetching: false
+      isFetching: false,
+      error: false
     };
   }
 
@@ -94,6 +95,7 @@ class App extends Component {
 
     return (
       <div className="App">
+        <JumbotronFluid />
         <UserList users={users} isFetching={isFetching} />
         <br />
         <UserForm onSubmit={this.onAddUser} error={error} />

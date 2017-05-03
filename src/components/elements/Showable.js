@@ -1,6 +1,10 @@
 import React from "react";
 
-const Showable = () => {
+const Showable = (props) => {
+    if (!props.error) {
+        return null
+    };
+    
   return (
     <div className="jumbotron">
       <h1>Hello, world!</h1>
